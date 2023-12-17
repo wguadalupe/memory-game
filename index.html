@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <link rel="stylesheet" href="./Assets/style.css">
+    <script src="index.js" defer></script>
+
+</head>
+<body>
+  <div>
+    <section id="score">Score: </section>
+  </div>
+  <button id="shuffle">Shuffle cards</button>
+<div class="board">
+  <ul class="images">
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Animals/Gray_Cat.png" alt="Gray cat">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Animals/Gray_Cat.png" alt="Gray cat">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Balloon/Blue_Balloon.png" alt="Blue balloon">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Balloon/Blue_Balloon.png" alt="Blue balloon">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Food/Banana_1.png" alt="Banana">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Food/Banana_1.png" alt="Banana">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Items/Water_Bottle_1.png" alt="Water bottle">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Items/Water_Bottle_1.png" alt="Water bottle">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Trees/Green_Tree_1.png" alt="Green Tree">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Trees/Green_Tree_1.png" alt="Green Tree">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Animals/Lion.png" alt="Lion">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Animals/Lion.png" alt="Lion">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Balloon/Green_Ballon.png" alt="Green Balloon">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Balloon/Green_Ballon.png" alt="Green Balloon">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Bomb_1.png" alt="Bomb">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="flipped">
+        <img src="./Assets/pixel_art/Maygon Pack/Bomb_1.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+    <li class="image">
+      <div class="unflipped">
+        <img src="./Assets/background.png" alt="Back of the card image with flowers">
+      </div>
+    </li>
+  </ul>
+  </div>
+</div>
+</body>
+</html>

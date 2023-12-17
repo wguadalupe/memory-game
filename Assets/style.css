@@ -1,0 +1,115 @@
+/*importgoogle font - Inconsolata*/
+
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:wght@400;500;600;700&display=swap');
+
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Inconsolata' sans-serif;
+}
+
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    background-image: url(./brick_wall.jpg);  /*added an image instead of a background color*/
+}
+.board{
+    padding: 20px;
+    border-radius: 10px;
+    background: #a6acb0;
+    box-shadow: 0 10px 25px black;
+}
+
+.images, .image, .flipped, .unflipped{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image{
+    height: 400px;
+    width: 400px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.images, .image{
+cursor: pointer; /*changes the pointer to a hand icon when hovering over the images*/
+list-style: none;
+user-select: none;
+position: relative; 
+perspective: 1000px;/*defines how far the object is away from the user which impacts perception depth*/
+transform-style: preserve-3d; /*ensures that the children of the element are also positioned in the 3D space*/
+height: calc(100% /4 - 10px); /*Specifies the height of the content area, padding area or border area (depending on 'box-sizing') of certain boxes*/
+width: calc(100% / 4 - 10px);
+}
+
+.flipped.shake .unflipped.shake{
+    animation: shake 0.40s ease-in-out;
+}
+
+/*define the shake animation*/
+@keyframes shake {
+0%, 100%{
+    transform: translateX(0);/*element has not moved*/
+} 20%{
+    transform: translateX(-13px);/*moves -13 pixels (to the left)*/
+} 40% {
+transform: translateX(13px);/*moves 13 pixels to the right (positive)*/
+} 60%{
+    transform: translateX(-8px);/*moves 8 pixels to the left*/
+} 80%{
+    transoform: translateX(8px);/*moves 8 pixels back to the right*/
+}
+
+}
+
+.images, .flipped, .unflipped{
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    border-radius: 7px;
+    background: #a436499d;
+    pointer-events: none; /*sets how the mouse reacts to a mouse event*/
+    backface-visibility: hidden;/*hides 'turns away' the back of the element from the viewer*/
+    box-shadow: 0 3px 10px #130d0d;
+}
+
+.image .flipped img{
+    width: 19px;
+}
+
+.image .unflipped img{
+    max-width: 45px;
+}
+
+.image .unflipped{
+    transform: rotateY(-180deg);
+}
+
+.image.flip .unflipped{
+    transform: rotateY(0);
+}
+
+.image.flip .flipped{
+    transform: rotateY(180deg);
+}
+
+@media screen and (max-width: 700px) {
+
+    .images{
+        height: 300px;
+        width: 300px;
+    }
+    
+    .image .flipped img{
+        width: 20px;
+    }
+
+    .image .unflipped img{
+        max-width: 40px;
+    }
+}

@@ -13,7 +13,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 80vh;
+    min-height: 100vh;
     background-image: url(./brick_wall.jpg);  /*added an image instead of a background color*/
 }
 .board{
@@ -39,6 +39,6 @@ body{
     cursor: pointer;
 }
 
-.image.flipped {
+.tile.flipped {
 background-color: #fff;
 }

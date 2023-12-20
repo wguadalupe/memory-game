@@ -11,6 +11,7 @@ let memoryBoard = []; // Array for board elements like times
 let firstTile = null; //Tracks the first tile chosen by the player
 let secondTile = null;
 let score = 0; //tracks score
+let isWaiting = false;
 
 const imageSet = [
     'assets/pixel_art/Maygon Pack/Animals/Gray_Cat.png',
@@ -85,6 +86,7 @@ function preloadImages() {
 
 //click handler
 function tileClick(tile, index) {
+    if (isWaiting) return;
     if (!firstTile) {
         firstTile = { tile, index};
         revealTile(tile);
@@ -105,19 +107,22 @@ function revealTile(tile) {
 
 //check if 2 tiles match
 function checkMatch() {
-        //ensure the two tiles are different tiles & checks the elements in the arrays and checks if the different tiles are a match
     if (firstTile.index !== secondTile.index && memoryBoard[firstTile.index] === memoryBoard[secondTile.index]) {
-        score++
+        score++;
         document.getElementById('score').innerText = 'Score: ' + score;
+        firstTile = null;
+        secondTile = null;
     } else {
-        setTimeout(() => { //hide the tiles
+        isWaiting = true; // Set waiting flag to true
+        setTimeout(() => { // Hide the tiles
             hideTile(firstTile.tile);
             hideTile(secondTile.tile);
-        }, 1000); //flip the cards over after 1 second
+            firstTile = null;
+            secondTile = null;
+            isWaiting = false; // Reset waiting flag
+        }, 1000); // Flip the cards over after 1 second
     }
-    firstTile = null;
-    secondTile = null;
-    }
+}
 
     //hide a tile
     function hideTile(tile) {

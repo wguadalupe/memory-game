@@ -1,75 +1,128 @@
-const memBoardSize = 16; //This will help determine the board size
-let memoryBoard = [];//empty array for board elements like tiles
-let firstTile = null; //tracks the first tile chosen by the player
-let secondTile = null; //tracks the 2nd tile picked by the player
-let score = 0;//tracks score
+document.addEventListener('DOMContentLoaded', () => {
+    preloadImages();
+    resetBoard();
+    document.getElementById('shuffleButton').addEventListener('click', resetBoard);
+});
 
+
+const memBoardSize = 16; //Determines board size
+let resetTimer;
+let memoryBoard = []; // Array for board elements like times
+let firstTile = null; //Tracks the first tile chosen by the player
+let secondTile = null;
+let score = 0; //tracks score
+
+const imageSet = [
+    'assets/pixel_art/Maygon Pack/Animals/Gray_Cat.png',
+    'assets/pixel_art/Maygon Pack/Balloon/Blue_Balloon.png',
+    'assets/pixel_art/Maygon Pack/Food/Banana_1.png',
+    'assets/pixel_art/Maygon Pack/Items/Water_Bottle_1.png',
+    'assets/pixel_art/Maygon Pack/Trees/Purple_Tree_2.png',
+    'assets/pixel_art/Maygon Pack/Bomb_1.png',
+    'assets/pixel_art/Maygon Pack/Animals/Lion.png',
+    'assets/pixel_art/Maygon Pack/Balloon/Pink_Balloon.png',
+    'assets/background.png'
+
+]
+
+//initialize a new board:
 function newBoard() {
-    //this loop will run until i is less than half of boardSize
-for (let i = 0; i < memBoardSize /2; i++) { 
-    memoryBoard.push(i);//this adds the current value of 'i' to the end of the memoryBoard array
-    memoryBoard.push(i);//since this needs to be done twice for the memory game, it adds 2 identical values each time. 
-}
-
-//shuffle the board
-memoryBoard = memoryBoard.sort(() => Math.random() - 0.5);//memoryBoard.sort is a method that sorts the elements of an array. 
-                                                         //the sorting function () => Math.random() - 0.5 is a funtion that returns a random number that is less than, equal to, or greater than 0.5
-}
-
-//reset board function
-function resetBoard() {
-    memoryBoard = [];
-    firstTile = null;
-    secondTile = null; 
-    score = 0;
-    document.getElementById('score').innerText = 'Score: 0'; //selects the ID 'score' then sets its innerText property to 0
-    newBoard();
-    rendernewBoard();
-}
-
-//create a new board
-function rendernewBoard() {
-    const memoryGameBoard = document.getElementById('board'); //gets the HTML element w/the 'board' ID and assigns it to memoryGameBoard
-    memoryGameBoard.innerHTML = ''; //resets the board
-    //iterates over the memoryBoard array
-    for (let i = 0; i < memoryBoard.length; i++) {
-    const tileElement = document.createElement('div'); //creates a new div for each tile.
-    tileElement.classList.add('tile');//adds a class of 'tile' for styling.
-    tileElement.dataset.value = memoryBoard[i]; //Each tile's value (from the memoryBoard array) is stored in a custom data attribute (data-value)
-    tileElement.innerText = '?';// Initially, each tile displays a '?' character.
-    
-    //responds when a tile is clicked
-    tileElement.addEventListener('click', () => {
-        if (!firstTile) { //if 'firstTile' is not already set the clicked tile becomes the firstTile.
-            firstTile = tileElement;
-            tileElement.classList.add('flipped'); //shows the tile's value
-            tileElement.innerText = tileElement.dataset.value;
-        } else if (!secondTile && tileElement !== firstTile) { //else if 'secondTile' is not set and the clicked tile is not the same as 'firstTile', the ckicked tile becomes the sercondTile.
-            secondTile = tileElement;
-            tileElement.classList.add('flipped');
-            tileElement.innerText = tileElement.dataset.value;
-            //if firstTile and the clicked tile ('secondTile') have the same 'dataset.value', the score is incremented.
-            if (firstTile.dataset.value === tileElement.dataset.value) {
-                score++;
-                document.getElementById('score').innerText = 'Score: ' + score; //the score is updated and bot 'firstTile' and 'secondTile' is set to null.
-                firstTile = null;
-                secondTile = null;
-            } else {
-                //if the tiles don't match, a 'setTimeout' is used to flip the tiles back over after 1 second
-                setTimeout(() => {
-                    firstTile.classList.remove('flipped');
-                    secondTile.classList.remove('flipped');
-                    firstTile = null;
-                    secondTile = null;
-                }, 1000);
-            
-        }
+    imageSet.forEach((set) => {
+        memoryBoard.push(set, set); //add each image twice
     });
+    
 
-    memoryGameBoard.appendChild(tileElement);
+    shuffleBoard(); //shuffle the board
+}
+
+//shuffle function
+function shuffleBoard() {
+    memoryBoard.sort(() => Math.random() - 0.5);
+}
+
+//reset the board
+function resetBoard() {
+    memoryBoard = []
+    firstTile = null;
+    secondTile = null;
+    score = 0;
+    document.getElementById('score').innerText = 'Score: 0';
+    newBoard();
+    renderNewboard();
+    clearTimeout(resetTimer); //clear and reset the timer
+    const resetTime = 300000; //5 minutes
+    resetTimer =setTimeout(resetBoard, resetTime); //set the timer
+}
+
+//render the new board
+function renderNewboard() {
+    const boardElement = document.getElementById('board'); //get the board element should be displayed
+    boardElement.innerHTML = ''; //clear any existing content in the board
+
+    //iterare over each value in the memoryBoard array
+    memoryBoard.forEach((imageSet, index) => {
+        const tileElement = document.createElement('div');
+        tileElement.classList.add('tile');
+        const imageElement = document.createElement('img');
+        imageElement.src = 'assets/background.png';
+        imageElement.classList.add('tile-image');
+        tileElement.appendChild(imageElement);
+        tileElement.dataset.index = index; //store the index
+
+        tileElement.addEventListener('click', () => tileClick(tileElement, index));
+        boardElement.appendChild(tileElement); //append the tile
+
+  
+    });
+}
+
+function preloadImages() {
+    imageSet.forEach((set) => {
+        const img = new Image();
+        img.src = set;
+    })
+}
+
+//click handler
+function tileClick(tile, index) {
+    if (!firstTile) {
+        firstTile = { tile, index};
+        revealTile(tile);
+    } else if (!secondTile && index !== firstTile.index) {
+        secondTile = { tile, index};
+        revealTile(tile);
+        checkMatch();
+    }
+    
+}
+
+//reveal a tile
+function revealTile(tile) {
+    const img = tile.querySelector('.tile-image');
+    img.src = memoryBoard[tile.dataset.index]; //set the actual image
+    tile.classList.add('flipped');
+}
+
+//check if 2 tiles match
+function checkMatch() {
+        //ensure the two tiles are different tiles & checks the elements in the arrays and checks if the different tiles are a match
+    if (firstTile.index !== secondTile.index && memoryBoard[firstTile.index] === memoryBoard[secondTile.index]) {
+        score++
+        document.getElementById('score').innerText = 'Score: ' + score;
+    } else {
+        setTimeout(() => { //hide the tiles
+            hideTile(firstTile.tile);
+            hideTile(secondTile.tile);
+        }, 1000); //flip the cards over after 1 second
+    }
+    firstTile = null;
+    secondTile = null;
     }
 
-
-document.getElementById('shuffle').addEventListener('click', resetBoard);
-
+    //hide a tile
+    function hideTile(tile) {
+       const imgTile = tile.querySelector('.tile-image');
+       imgTile.src = 'assets/background.png';
+       tile.classList.remove('flipped');
+    }
 resetBoard();

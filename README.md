@@ -29,6 +29,9 @@ Behnam-Norouzi: https://unsplash.com/@behy_studio
 5. **Event Listener for 'Shuffle' Button**:
    - Calls `resetBoard` function when the 'Shuffle tiles' button is clicked.
 
+6. **Image array**:
+   -
+
 ### HTML Structure
 - Contains a score section, a shuffle button, a timer display, and a `div` for the game board.
 

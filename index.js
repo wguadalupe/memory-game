@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     preloadImages().then(() => {
     resetBoard();  //Once all images are loaded, start/reset the game
     }).catch((error) => {
-      console.error("Error loadig images", error);
+      console.error("Error loading images", error);
     });
     document.getElementById('shuffleButton').addEventListener('click', resetBoard);
 });
@@ -25,17 +25,15 @@ root.style.setProperty('--num-rows', rows);
 
 
 const imageSet = [
-    'assets/pixel_art/Maygon Pack/Animals/Gray_Cat.png',
-    'assets/pixel_art/Maygon Pack/Balloon/Blue_Balloon.png',
-    'assets/pixel_art/Maygon Pack/Food/Banana_1.png',
-    'assets/pixel_art/Maygon Pack/Items/Water_Bottle_1.png',
-    'assets/pixel_art/Maygon Pack/Trees/Purple_Tree_2.png',
-    'assets/pixel_art/Maygon Pack/Bomb_1.png',
-    'assets/pixel_art/Maygon Pack/Animals/Lion.png',
-    'assets/pixel_art/Maygon Pack/Balloon/Pink_Balloon.png',
-    
-
-]
+    { src: 'assets/pixel_art/Maygon Pack/Animals/Gray_Cat.png', alt: 'cat' },
+    { src: 'assets/pixel_art/Maygon Pack/Balloon/Blue_Balloon.png', alt: 'blue balloon' },
+    { src: 'assets/pixel_art/Maygon Pack/Food/Banana_1.png', alt: 'banana' },
+    { src: 'assets/pixel_art/Maygon Pack/Items/Water_Bottle_1.png', alt: 'water bottle' },
+    { src: 'assets/pixel_art/Maygon Pack/Trees/Purple_Tree_2.png', alt: 'purple tree' },
+    { src: 'assets/pixel_art/Maygon Pack/Bomb_1.png', alt: 'bomb' },
+    { src: 'assets/pixel_art/Maygon Pack/Animals/Lion.png', alt: 'lion' },
+    { src: 'assets/pixel_art/Maygon Pack/Balloon/Pink_Balloon.png', alt: 'pink balloon' }
+];
 
 //Initialize a new board:
 function newBoard() {
@@ -91,10 +89,11 @@ function startTimer(duration) {
 function endGame() {
     isWaiting = true;
     alert("Time's up! Game over!");
+    
 
 }
 
-endGame();
+
 
 
 

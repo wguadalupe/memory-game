@@ -7,6 +7,8 @@
     --tile-border-radius: 10px;
     --tile-shadow: 0 54px 8px rgba(0,0,0,0.2);
     --font-family: 'Inconsolata', sans-serif;
+    --num-columns: 4;
+    --num--rows: 4;
 }
 
 /*Basic reset*/
@@ -25,14 +27,16 @@
     gap: 10px; /*spacing between tiles*/
     padding: 20px;
     border-radius: 10px;
+    border: 5px solid black;
     background: var(--board-bg-color) ;
     box-shadow: 0 10px 25px black;
-    max-width: calc(var(--tile-size) * 4 + 40px) /* adjust based on the number of tiles per row*/
+    /*formula: 'width of the board = (tile size * number of columns) + (gap size * (number of columns - 1))*/
+    max-width: calc(var(--tile-size) * var(--num-columns, columns) + 10px * (var(--num-columns) - 1)); 
 }
 
 /* style each tile*/
 .tile {
-    height: var(--tile);
+    height: var(--tile-size);
     width: var(--tile-size);
     background: var(--tile-bg-color);
     border-radius: var(--tile-border-radius);

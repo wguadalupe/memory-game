@@ -1,5 +1,5 @@
 
-
+/*make the following styles accessible throughout the stylesheet*/
 :root {
     --tile-size: 100px; /*Adjust this to change the tile size*/
     --board-bg-color: #a6acb0;
@@ -8,7 +8,7 @@
     --tile-shadow: 0 54px 8px rgba(0,0,0,0.2);
     --font-family: 'Inconsolata', sans-serif;
     --num-columns: 4;
-    --num--rows: 4;
+    --num-rows: 4;
 }
 
 /*Basic reset*/
@@ -22,6 +22,7 @@
 /*styling the board*/
 #board {
     display: flex;
+    margin: auto;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px; /*spacing between tiles*/

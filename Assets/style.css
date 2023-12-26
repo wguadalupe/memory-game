@@ -19,20 +19,25 @@
     font-family: var(--font-family); /*means that the font family for the element will be whatever value is assigned to the --font-family custom property elsewhere in the CSS*/
 }
 
+body {
+background-color: #475468;
+background-image: url("background.png");
+}
 /*styling the board*/
 #board {
     display: flex;
     margin: auto;
+    margin-top: 30px;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px; /*spacing between tiles*/
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     border: 5px solid black;
     background: var(--board-bg-color) ;
     box-shadow: 0 10px 25px black;
     /*formula: 'width of the board = (tile size * number of columns) + (gap size * (number of columns - 1))*/
-    max-width: calc(var(--tile-size) * var(--num-columns, columns) + 10px * (var(--num-columns) - 1)); 
+    max-width: calc(var(--tile-size) * var(--num-columns) + 10px * (var(--num-columns) - 1)); 
 }
 
 /* style each tile*/

@@ -44,8 +44,8 @@ const imageSet = [
     createImagePath('/Items/Water_Bottle_1.png', 'water bottle'),
     createImagePath('/Trees/Purple_Tree_2.png', 'purple tree'),
     createImagePath('/Bomb_1.png', 'bomb'),
-    createImagePath('/Lion.png', 'lion'),
-    createImagePath('/Pink_Balloon.png', 'pink balloon'),
+    createImagePath('/Animals/Lion.png', 'lion'),
+    createImagePath('/Balloon/Pink_Balloon.png', 'pink balloon'),
 ];
 
 // Preload all images before the game starts

@@ -15,15 +15,24 @@ document.addEventListener('DOMContentLoaded', () => {
 const memBoardSize = 16;
 const columns = Math.sqrt(memBoardSize);
 const rows = memBoardSize / columns;
+// Board configuration
+const memBoardSize = 16;
+const columns = Math.sqrt(memBoardSize);
+const rows = memBoardSize / columns;
 
+// Game state variables
 // Game state variables
 let resetTimer;
 let memoryBoard = [];
 let firstTile = null;
+let memoryBoard = [];
+let firstTile = null;
 let secondTile = null;
+let score = 0;
 let score = 0;
 let isWaiting = false;
 
+// Set CSS variables for board layout
 // Set CSS variables for board layout
 const root = document.documentElement;
 root.style.setProperty('--num-columns', columns);
@@ -107,6 +116,7 @@ let matchedPairs = 0; // Track the number of matched pairs
 //reset score when starting a whole new game
 function resetBoard() {
     memoryBoard = [];
+    memoryBoard = [];
     firstTile = null;
     secondTile = null;
     matchedPairs = 0;
@@ -122,6 +132,7 @@ function resetBoard() {
     resetTimer = setTimeout(() => endGame(true), 180000); // Pass true to indicate timeout
 }
 
+// Start a countdown timer for the game
 // Start a countdown timer for the game
 function startTimer(duration) {
     let time = duration;
@@ -190,26 +201,35 @@ function renderNewBoard() {
 
     // Create and append tiles to the board
     memoryBoard.forEach((image, index) => {
+    // Create and append tiles to the board
+    memoryBoard.forEach((image, index) => {
         const tileElement = document.createElement('div');
         tileElement.classList.add('tile');
         const imageElement = document.createElement('img');
         imageElement.src = 'assets/background.png'; // Set default background image
+        imageElement.src = 'assets/background.png'; // Set default background image
         imageElement.classList.add('tile-image');
         tileElement.appendChild(imageElement);
         tileElement.dataset.index = index;
+        tileElement.dataset.index = index;
 
         tileElement.addEventListener('click', () => tileClick(tileElement, index));
+        boardElement.appendChild(tileElement);
         boardElement.appendChild(tileElement);
     });
 }
 
 // Click handler for tiles
+// Click handler for tiles
 function tileClick(tile, index) {
+    if (isWaiting) return; // Do nothing if waiting for tiles to flip back
     if (isWaiting) return; // Do nothing if waiting for tiles to flip back
     if (!firstTile) {
         firstTile = { tile, index };
+        firstTile = { tile, index };
         revealTile(tile);
     } else if (!secondTile && index !== firstTile.index) {
+        secondTile = { tile, index };
         secondTile = { tile, index };
         revealTile(tile);
         checkMatch();
@@ -217,8 +237,10 @@ function tileClick(tile, index) {
 }
 
 // Reveal a tile
+// Reveal a tile
 function revealTile(tile) {
     const img = tile.querySelector('.tile-image');
+    img.src = memoryBoard[tile.dataset.index].src;
     img.src = memoryBoard[tile.dataset.index].src;
     tile.classList.add('flipped');
 }
@@ -242,6 +264,8 @@ function checkMatch() {
         firstTile = null;
         secondTile = null;
     } else {
+        isWaiting = true;
+        setTimeout(() => {
         isWaiting = true;
         setTimeout(() => {
             hideTile(firstTile.tile);

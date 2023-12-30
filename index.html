@@ -7,15 +7,17 @@
     <title>Memory Game</title>
     <link rel="stylesheet" href="./Assets/style.css">
     <script src="index.js" defer></script>
-
 </head>
 <body>
-  <div>
-    <section id="score">Score: 0</section>
-  </div>
-  <button id="shuffleButton">Shuffle tiles</button>
-  <div id="timer">Time left: <span id="time">300</span> seconds</div>
-<div id="board"></div>
+    <div id="game-info">
+        <section id="score">Score: 0</section>
+        <section id="highScore">High Score: 0</section>
+        <div id="timer">Time left: <span id="time">300</span> seconds</div>
+    </div>
+    <div id="game-messages"></div>
+    <div id="board"></div>
+    <button id="shuffleButton" aria-label="Shuffle Tiles">Shuffle tiles</button>
+    
+    
 </body>
 </html>
-  

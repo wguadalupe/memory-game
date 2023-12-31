@@ -155,60 +155,94 @@ function updateHighScore() {
     }
 }
 
+// Renders the new game board
 function renderNewBoard() {
+    // Accesses the board element in the HTML
     const boardElement = document.getElementById('board');
+    // Clears any existing content in the board element
     boardElement.innerHTML = '';
 
+    // Iterates over each image in the memoryBoard array
     memoryBoard.forEach((image, index) => {
+        // Creates a new div element for each tile
         const tileElement = document.createElement('div');
+        // Adds 'tile' class for styling
         tileElement.classList.add('tile');
+
+        // Creates an img element for the tile
         const imageElement = document.createElement('img');
+        // Sets the default image (hidden face of tile)
         imageElement.src = 'assets/background.png';
+        // Adds 'tile-image' class for styling
         imageElement.classList.add('tile-image');
+
+        // Appends the image element to the tile element
         tileElement.appendChild(imageElement);
+        // Stores the index of the tile for later reference
         tileElement.dataset.index = index;
+        // Adds a click event listener to each tile
         tileElement.addEventListener('click', () => tileClick(tileElement, index));
+        // Appends the tile element to the board element
         boardElement.appendChild(tileElement);
     });
 }
 
+// Handles the tile click event
 function tileClick(tile, index) {
+    // Prevents action if waiting for animation or if the same tile is clicked twice
     if (isWaiting || tile === firstTile) return;
+
+    // Check if it's the first tile being clicked
     if (!firstTile) {
+        // Sets the first tile and reveals it
         firstTile = tile;
         revealTile(tile, index);
     } else if (!secondTile) {
+        // Sets the second tile, reveals it, and checks for a match
         secondTile = tile;
         revealTile(tile, index);
         checkMatch();
     }
 }
 
+// Reveals the face of the tile
 function revealTile(tile, index) {
+    // Selects the image element within the tile and sets its source to the actual image
     const img = tile.querySelector('.tile-image');
     img.src = memoryBoard[index].src;
+    // Adds 'flipped' class to show the tile face
     tile.classList.add('flipped');
 }
 
+// Checks if the two selected tiles match
 function checkMatch() {
+    // Compares the source of both selected tiles
     if (memoryBoard[firstTile.dataset.index].src === memoryBoard[secondTile.dataset.index].src) {
+        // Increments the score for a match
         score++;
         document.getElementById('score').innerText = 'Score: ' + score;
+        // Increments the count of matched pairs
         matchedPairs++;
-        // Check if all pairs on the first board have been matched
+
+        // Checks if all pairs on the first board have been matched
         if (matchedPairs === memBoardSize / 2 && !firstBoardCompleted) {
-            // Transition to the second board
+            // Flag set to indicate completion of the first board
             firstBoardCompleted = true;
-            matchedPairs = 0; // Reset matched pairs for the second board
+            // Resets matched pairs count for the second board
+            matchedPairs = 0;
+
+            // Waits 1 second before transitioning to the second board
             setTimeout(() => {
                 alert("Congratulations! Moving to the second board.");
                 transitionToSecondBoard();
                 renderNewBoard();
-                resetTimerForNewBoard(); // Reset and restart the timer for the second board
-            }, 1000); // Delay to allow the last pair to be shown before alert
+                resetTimerForNewBoard(); // Resets and restarts the timer for the second board
+            }, 1000);
         }
+        // Resets the selected tiles
         firstTile = secondTile = null;
     } else {
+        // Waits 1 second and then hides both tiles if they don't match
         isWaiting = true;
         setTimeout(() => {
             hideTile(firstTile);
@@ -219,20 +253,28 @@ function checkMatch() {
     }
 }
 
+// Transitions to the second image set for the board
 function transitionToSecondBoard() {
     newBoard(imageSet2); 
 }
 
-
+// Resets the timer for the new board
 function resetTimerForNewBoard() {
+    // Clears the existing timers
     clearTimeout(resetTimer);
     clearInterval(countdown);
+    // Starts a new timer
     startTimer(180);
-    resetTimer = setTimeout(() => endGame(true), 180000); // Reset end game timer
+    // Sets a timer to end the game after the duration
+    resetTimer = setTimeout(() => endGame(true), 180000);
 }
 
+// Hides the tile by flipping it back to show the background image
 function hideTile(tile) {
+    // Selects the image element and sets its source to the background image
     const imgTile = tile.querySelector('.tile-image');
     imgTile.src = 'assets/background.png';
+    // Removes the 'flipped' class to hide the tile face
     tile.classList.remove('flipped');
 }
+

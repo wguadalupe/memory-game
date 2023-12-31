@@ -7,49 +7,31 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error loading images", error);
         });
 
-    // Add event listener to the shuffle button
     document.getElementById('shuffleButton').addEventListener('click', resetBoard);
 });
 
-// Board configuration
-const memBoardSize = 16;
-const columns = Math.sqrt(memBoardSize);
-const rows = memBoardSize / columns;
-// Board configuration
 const memBoardSize = 16;
 const columns = Math.sqrt(memBoardSize);
 const rows = memBoardSize / columns;
 
-// Game state variables
-// Game state variables
 let resetTimer;
-let memoryBoard = [];
-let firstTile = null;
 let memoryBoard = [];
 let firstTile = null;
 let secondTile = null;
 let score = 0;
-let score = 0;
 let isWaiting = false;
+let firstBoardCompleted = false; 
+let matchedPairs = 0; 
+let countdown;
 
-// Set CSS variables for board layout
-// Set CSS variables for board layout
 const root = document.documentElement;
 root.style.setProperty('--num-columns', columns);
 root.style.setProperty('--num-rows', rows);
 
-// Function to create full image path
-function createImagePath(path, alt) {
-    return { src: basePath + path, alt: alt };
-}
-
-// Base path for images
 const basePath = 'assets/pixel_art/';
-
-// Image set for the memory game
 const imageSet = [
     createImagePath('Maygon Pack/Animals/Gray_Cat.png', 'cat'),
-    createImagePath('Maygon Pack/Balloon/Blue_Balloon.png', 'blue balloon'),
+	createImagePath('Maygon Pack/Balloon/Blue_Balloon.png', 'blue balloon'),
     createImagePath('Maygon Pack/Food/Banana_1.png', 'banana'),
     createImagePath('Maygon Pack/Items/Water_Bottle_1.png', 'water bottle'),
     createImagePath('Maygon Pack/Trees/Purple_Tree_2.png', 'purple tree'),
@@ -58,18 +40,28 @@ const imageSet = [
     createImagePath('Maygon Pack/Balloon/Pink_Balloon.png', 'pink balloon'),
 ];
 
+function createImagePath(path, alt) {
+    return { src: basePath + path, alt: alt };
+}
+
+const basePath2 = 'assets/wonderland/';
+
 const imageSet2 = [
-    createImagePath('Assets/wonderland/alice_newbground.png', 'alice'),
-    createImagePath('Assets/wonderland/bishop_newbground.png', 'bishop'),
-    createImagePath('Assets/wonderland/duece_newbground.png', 'duece'),
-    createImagePath('Assets/wonderland/humpty_newbground.png', 'humpty'),
-    createImagePath('Assets/wonderland/mad_hatter_newbground.png', 'mad hatter'),
-    createImagePath('Assets/wonderland/king_of_hearts_newbground.png', 'king of hearts'),
-    createImagePath('Assets/wonderland/queen_of_hearts_newbground.png','queen of hearts'),
-    createImagePath('Assets/wonderland/rabbit_newbground.png', 'not quite white rabbit'),
+    createImagePath2('alice_newbground.png', 'alice'),
+    createImagePath2('bishop_newbground.png', 'bishop'),
+    createImagePath2('duece_newbground.png', 'duece'),
+    createImagePath2('humpty_newbground.png', 'humpty'),
+    createImagePath2('mad_hatter_newbground.png', 'mad hatter'),
+    createImagePath2('king_of_hearts_newbground.png', 'king of hearts'),
+    createImagePath2('queen_of_hearts_newbground.png','queen of hearts'),
+    createImagePath2('rabbit_newbground.png', 'not quite white rabbit'),
 ];
 
-// Preload all images before the game starts
+function createImagePath2(path, alt) {
+    return { src: basePath2 + path, alt: alt };
+}
+
+
 function preloadImages(imageSet) {
     let promises = imageSet.map(image => {
         return new Promise((resolve, reject) => {
@@ -82,41 +74,21 @@ function preloadImages(imageSet) {
     return Promise.all(promises);
 }
 
-// Preload images for both sets when DOM content is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    Promise.all([preloadImages(imageSet), preloadImages(imageSet2)])
-        .then(() => {
-            resetBoard(); // Start/reset the game once all images are loaded
-        })
-        .catch(error => {
-            console.error("Error loading images", error);
-        });
-    // ... rest of your code ...
-});
-
-
-// Initialize a new board
-function newBoard() {
-    imageSet.forEach((set) => {
-        // Add each image twice for matching
+function newBoard(imageSet) {
+    memoryBoard = [];
+    imageSet.forEach(set => {
         memoryBoard.push(set, set);
     });
-    shuffleBoard(); // Shuffle the board
+    shuffleBoard();
 }
 
-// Shuffle the memory board
 function shuffleBoard() {
     memoryBoard.sort(() => Math.random() - 0.5);
 }
 
-let countdown;
-let firstBoardCompleted = false; // Track if the first board is completed
-let matchedPairs = 0; // Track the number of matched pairs
 
-//reset score when starting a whole new game
+
 function resetBoard() {
-    memoryBoard = [];
-    memoryBoard = [];
     firstTile = null;
     secondTile = null;
     matchedPairs = 0;
@@ -124,64 +96,54 @@ function resetBoard() {
         score = 0;
         document.getElementById('score').innerText = 'Score: 0';
     }
-    newBoard();
+    newBoard(imageSet);
     renderNewBoard();
     clearTimeout(resetTimer);
     clearInterval(countdown);
     startTimer(180);
-    resetTimer = setTimeout(() => endGame(true), 180000); // Pass true to indicate timeout
+    resetTimer = setTimeout(() => endGame(true), 180000);
 }
 
-// Start a countdown timer for the game
-// Start a countdown timer for the game
+function transitionToSecondBoard() {
+    newBoard(imageSet2);
+}
+
 function startTimer(duration) {
     let time = duration;
     document.getElementById('time').innerText = time;
     countdown = setInterval(() => {
-        time--;
-        document.getElementById('time').innerText = time;
-        if (time <= 0) {
+        if (--time <= 0) {
             clearInterval(countdown);
-            endGame();
+            endGame(true);
+        } else {
+            document.getElementById('time').innerText = time;
         }
     }, 1000);
 }
 
-function newSecondBoard() {
-    imageSet2.forEach((set) => {
-        // Add each image twice for matching
-        memoryBoard.push(set, set);
-    });
-    shuffleBoard(); // Shuffle the board
-}
 
 
-// End the game when time is up or if a board is completed
 function endGame(isTimeout) {
     isWaiting = true;
     clearInterval(countdown);
 
-    if (firstBoardCompleted) {
-        alert("Congratulations! You've completed the second board!");
+    if (isTimeout && !firstBoardCompleted) {
+        alert("Time's up! Game over!");
+        score = 0; // Reset score if time runs out on the first board
+        document.getElementById('score').innerText = 'Score: 0';
         updateHighScore();
         resetGame();
-    } else if (isTimeout) {
-        alert("Time's up! Game over!");
-        if (matchedPairs < memBoardSize / 2) {
-            score = 0; // Reset score if time runs out
-            document.getElementById('score').innerText = 'Score: 0';
-        }
-        firstBoardCompleted = false;
+    } else if (firstBoardCompleted) {
+        // Handle end of second board or timeout on second board
+        let message = isTimeout ? "Time's up! Game over!" : "Congratulations! You've completed the game!";
+        alert(message);
         updateHighScore();
-    } else {
-        alert("Congratulations! Moving to the second board.");
-        firstBoardCompleted = true;
-        newSecondBoard();
+        resetGame();
     }
 }
 
 function resetGame() {
-    firstBoardCompleted = false;
+    firstBoardCompleted = false; // Reset this flag for a completely new game
     resetBoard();
 }
 
@@ -193,97 +155,84 @@ function updateHighScore() {
     }
 }
 
-
-// Render the new board
 function renderNewBoard() {
     const boardElement = document.getElementById('board');
-    boardElement.innerHTML = ''; // Clear the board
+    boardElement.innerHTML = '';
 
-    // Create and append tiles to the board
-    memoryBoard.forEach((image, index) => {
-    // Create and append tiles to the board
     memoryBoard.forEach((image, index) => {
         const tileElement = document.createElement('div');
         tileElement.classList.add('tile');
         const imageElement = document.createElement('img');
-        imageElement.src = 'assets/background.png'; // Set default background image
-        imageElement.src = 'assets/background.png'; // Set default background image
+        imageElement.src = 'assets/background.png';
         imageElement.classList.add('tile-image');
         tileElement.appendChild(imageElement);
         tileElement.dataset.index = index;
-        tileElement.dataset.index = index;
-
         tileElement.addEventListener('click', () => tileClick(tileElement, index));
-        boardElement.appendChild(tileElement);
         boardElement.appendChild(tileElement);
     });
 }
 
-// Click handler for tiles
-// Click handler for tiles
 function tileClick(tile, index) {
-    if (isWaiting) return; // Do nothing if waiting for tiles to flip back
-    if (isWaiting) return; // Do nothing if waiting for tiles to flip back
+    if (isWaiting || tile === firstTile) return;
     if (!firstTile) {
-        firstTile = { tile, index };
-        firstTile = { tile, index };
-        revealTile(tile);
-    } else if (!secondTile && index !== firstTile.index) {
-        secondTile = { tile, index };
-        secondTile = { tile, index };
-        revealTile(tile);
+        firstTile = tile;
+        revealTile(tile, index);
+    } else if (!secondTile) {
+        secondTile = tile;
+        revealTile(tile, index);
         checkMatch();
     }
 }
 
-// Reveal a tile
-// Reveal a tile
-function revealTile(tile) {
+function revealTile(tile, index) {
     const img = tile.querySelector('.tile-image');
-    img.src = memoryBoard[tile.dataset.index].src;
-    img.src = memoryBoard[tile.dataset.index].src;
+    img.src = memoryBoard[index].src;
     tile.classList.add('flipped');
 }
 
-
 function checkMatch() {
-    // Check if two selected tiles match
-    if (firstTile.index !== secondTile.index && memoryBoard[firstTile.index].src === memoryBoard[secondTile.index].src) {
-        // Increase score by one for a successful match
+    if (memoryBoard[firstTile.dataset.index].src === memoryBoard[secondTile.dataset.index].src) {
         score++;
-        // Update the score display on the web page
         document.getElementById('score').innerText = 'Score: ' + score;
-        // Increment the count of matched pairs
         matchedPairs++;
-    // Check if all pairs on the board have been matched
-    // The total number of pairs is half the memory board size
-    // Check if it's the first board to transition to the second board after completion
+        // Check if all pairs on the first board have been matched
         if (matchedPairs === memBoardSize / 2 && !firstBoardCompleted) {
-            endGame(false); // Call endGame when the first board is completed
+            // Transition to the second board
+            firstBoardCompleted = true;
+            matchedPairs = 0; // Reset matched pairs for the second board
+            setTimeout(() => {
+                alert("Congratulations! Moving to the second board.");
+                transitionToSecondBoard();
+                renderNewBoard();
+                resetTimerForNewBoard(); // Reset and restart the timer for the second board
+            }, 1000); // Delay to allow the last pair to be shown before alert
         }
-        firstTile = null;
-        secondTile = null;
+        firstTile = secondTile = null;
     } else {
         isWaiting = true;
         setTimeout(() => {
-        isWaiting = true;
-        setTimeout(() => {
-            hideTile(firstTile.tile);
-            hideTile(secondTile.tile);
-            firstTile = null;
-            secondTile = null;
+            hideTile(firstTile);
+            hideTile(secondTile);
+            firstTile = secondTile = null;
             isWaiting = false;
         }, 1000);
     }
 }
 
-// Hide a tile
+function transitionToSecondBoard() {
+    newBoard(imageSet2); 
+}
+
+
+function resetTimerForNewBoard() {
+    clearTimeout(resetTimer);
+    clearInterval(countdown);
+    startTimer(180);
+    resetTimer = setTimeout(() => endGame(true), 180000); // Reset end game timer
+}
+
 function hideTile(tile) {
     const imgTile = tile.querySelector('.tile-image');
     imgTile.src = 'assets/background.png';
     tile.classList.remove('flipped');
 }
-
-// Start the game
-resetBoard();
-

@@ -4,6 +4,8 @@
 Images by: 
 Maygonpepetreynsh https://opengameart.org/users/maygonpepetreynsh
 Behnam-Norouzi: https://unsplash.com/@behy_studio
+Katsushika Hokusai: https://www.rawpixel.com/search?page=1&path=3.212.sub_topic-949&sort=curated
+William Penhallow Henderson: https://www.rawpixel.com/search?page=1&path=3.sub_topic-1141&sort=curated
 
 ### JavaScript Logic
 1. **Global Variables**:

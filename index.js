@@ -1,11 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    Promise.all([preloadImages(imageSet), preloadImages(imageSet2)])
+    Promise.all([preloadImages(imageSet), preloadImages(imageSet2), preloadImages(imageSet3)])
         .then(() => {
             resetBoard(); // Start/reset the game once all images are loaded
         })
         .catch(error => {
             console.error("Error loading images", error);
         });
+    startTimer(baseTime); 
+    resetTimer = setTimeout(() => endGame(true), baseTime * 1000); // Sets a timeout to automatically end the game after a specified duration.
+    // The 'baseTime' (in seconds) is multiplied by 1000 to convert it to milliseconds
 
     document.getElementById('shuffleButton').addEventListener('click', resetBoard);
 });
@@ -21,8 +24,12 @@ let secondTile = null;
 let score = 0;
 let isWaiting = false;
 let firstBoardCompleted = false; 
+let secondBoardCompleted = false;
+let thirdBoardCompleted = false;
 let matchedPairs = 0; 
 let countdown;
+let baseTime = 180; //Timing for the first board
+const timeDecreaseFactor = 30; //Decrease time by 30 seconds for each board
 
 const root = document.documentElement;
 root.style.setProperty('--num-columns', columns);
@@ -61,6 +68,23 @@ function createImagePath2(path, alt) {
     return { src: basePath2 + path, alt: alt };
 }
 
+const basePath3 = 'assets/Hokusai/';
+
+const imageSet3 = [
+    createImagePath3('japanese_woman.png', 'Hokusai’s Japanese woman (1760-1849) vintage ukiyo-e style. Original public domain image from the Library of Congress.'),
+    createImagePath3('laughing_demoness.png', 'Laughing Demoness (1831-1832) by Katsushika Hokusai. Original public domain image from The Minneapolis Institute of Art.'),
+    createImagePath3('memorial_anniversary.png', 'Memorial Anniversary (ca.1831–1832) in high resolution by Katsushika Hokusai. Original from The Minneapolis Institute of Art.'),
+    createImagePath3('red_sShōki_the_Demon_queller.png', 'Red Shōki, the Demon Queller (1847) by Katsushika Hokusai. Original public domain image from The MET Museum.'),
+    createImagePath3('the_lantern_ghost.png', 'Hokusais The Lantern Ghost, Iwa (1831-1832). Original public domain image from the Library of Congress.'),
+    createImagePath3('the_plate_mansion.png', 'The Plate Mansion by Katsushika Hokusai (1760-1849), a traditional Japanese Ukyio-e style illustration of traditional Japanese folklore ghost, Okiku. Original from Library of Congress.'),
+    createImagePath3('the_waterfall_of_amida_behind_the_kiso_road.png', 'Hokusais The waterfall of Amida behind the Kiso Road. Original from The Art Institute of Chicago.'),
+    createImagePath3('waterfall.png', 'Katsushika Hokusai (1760-1849). Waterfall where Yoshitsune Washed his Horse, Yoshino, Yamato Province. Original from The Los Angeles County Museum of Art.'),
+];
+
+function createImagePath3(path, alt) {
+    return { src: basePath3 + path, alt: alt };
+}
+
 
 function preloadImages(imageSet) {
     let promises = imageSet.map(image => {
@@ -87,25 +111,34 @@ function shuffleBoard() {
 }
 
 
-
+//Checks whether the 1st or 2nd board is completed and loads the appropriate images
 function resetBoard() {
     firstTile = null;
     secondTile = null;
     matchedPairs = 0;
+
     if (!firstBoardCompleted) {
-        score = 0;
-        document.getElementById('score').innerText = 'Score: 0';
+        newBoard(imageSet);
+    } else if (!secondBoardCompleted) {
+        newBoard(imageSet2);
+    } else {
+        newBoard(imageSet3);
     }
-    newBoard(imageSet);
+
     renderNewBoard();
     clearTimeout(resetTimer);
     clearInterval(countdown);
-    startTimer(180);
-    resetTimer = setTimeout(() => endGame(true), 180000);
+    startTimer(baseTime);
+    resetTimer = setTimeout(() => endGame(true), baseTime * 1000);
+   
 }
 
 function transitionToSecondBoard() {
     newBoard(imageSet2);
+}
+
+function transitionToThirdBoard() {
+    newBoard(imageSet3);
 }
 
 function startTimer(duration) {
@@ -218,28 +251,41 @@ function revealTile(tile, index) {
 function checkMatch() {
     // Compares the source of both selected tiles
     if (memoryBoard[firstTile.dataset.index].src === memoryBoard[secondTile.dataset.index].src) {
-        // Increments the score for a match
+		// Increments the score for a match
         score++;
         document.getElementById('score').innerText = 'Score: ' + score;
-        // Increments the count of matched pairs
-        matchedPairs++;
+        matchedPairs++; // Increments the count of matched pairs
+			// Checks if all pairs on the first board have been matched
+        if (matchedPairs === memBoardSize / 2) {
+            if (!firstBoardCompleted) {
+                // Handle completion of the first board
+                firstBoardCompleted = true;
+                matchedPairs = 0;  // Resets matched pairs count for the second board
+                setTimeout(() => { // Waits 1 second before transitioning to the second board
+                    alert("Congratulations! Moving to the second board.");
+                    transitionToSecondBoard();
+                    renderNewBoard();
+                    resetTimerForNewBoard();
+                }, 1000);
+            } else if (!secondBoardCompleted) {
+				secondBoardCompleted = true;
+				matchedPairs = 0;
+				setTimeout(() => {
+                    alert("Congratulations! Moving to the championship round!");
+                    transitionToThirdBoard();
+					renderNewBoard();
+					resetTimerForNewBoard();
+                }, 1000);
 
-        // Checks if all pairs on the first board have been matched
-        if (matchedPairs === memBoardSize / 2 && !firstBoardCompleted) {
-            // Flag set to indicate completion of the first board
-            firstBoardCompleted = true;
-            // Resets matched pairs count for the second board
-            matchedPairs = 0;
-
-            // Waits 1 second before transitioning to the second board
-            setTimeout(() => {
-                alert("Congratulations! Moving to the second board.");
-                transitionToSecondBoard();
-                renderNewBoard();
-                resetTimerForNewBoard(); // Resets and restarts the timer for the second board
-            }, 1000);
+            }else if (!thirdBoardCompleted) {
+                thirdBoardCompleted = true;
+                matchedPairs = 0;
+				setTimeout(() => {
+                    alert("Congratulations!");
+ 
+                }, 1000);
+            }
         }
-        // Resets the selected tiles
         firstTile = secondTile = null;
     } else {
         // Waits 1 second and then hides both tiles if they don't match
@@ -256,6 +302,18 @@ function checkMatch() {
 // Transitions to the second image set for the board
 function transitionToSecondBoard() {
     newBoard(imageSet2); 
+    renderNewBoard();
+    baseTime -= timeDecreaseFactor; // Decrease time for board 2
+    startTimer(baseTime);
+    resetTimer = setTimeout(() => endGame(true), baseTime * 1000);
+}
+
+function transitionToThirdBoard() {
+    newBoard(imageSet3);
+    renderNewBoard();
+    baseTime -= timeDecreaseFactor;
+    startTimer(baseTime);
+    resetTimer = setTimeout(()=> endGame(true), baseTime * 1000);
 }
 
 // Resets the timer for the new board

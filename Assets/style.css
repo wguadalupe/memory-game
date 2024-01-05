@@ -6,8 +6,8 @@
     --tile-border-radius: 10px;
     --tile-shadow: 0 54px 8px rgba(0,0,0,0.2);
     --font-family: 'Inconsolata', sans-serif;
-    --num-columns: 4;
-    --num-rows: 4;
+   --num-columns: 4;
+    --num-rows: 4; 
 }
 
 /*Basic reset*/
@@ -28,7 +28,7 @@ background-image: url("background.png");
     margin: auto;
     margin-top: 30px;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-evenly;
     gap: 10px; /*spacing between tiles*/
     padding: 15px;
     border-radius: 10px;
